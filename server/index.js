@@ -4,12 +4,19 @@ const express = require('express');
 // React gives you access to ES2015, so we have that
 // going for us, which is nice.
 
+// Gives express the idea of how to handle authentication
+const passport = require('passport');
+
+// Instructs passport on how to authenticate our users w/ Google.
+// Only care about the Strategy class.
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+
 // This here represents a running express app. It listens.
 const app = express();
 
-app.get('/', (req, res) => {
-  res.send({ bye: 'dudes' });
-});
+// .use() is a generic register, saying there is a new strategy available.
+// Creates a new instance of the Google OAuth strategy
+passport.use(new GoogleStrategy());
 
 // all caps = constant that should be taken mad seriously.
 const PORT = process.env.PORT || 5000;
