@@ -8,7 +8,7 @@ const express = require('express');
 const app = express();
 
 app.get('/', (req, res) => {
-  res.send({ hi: 'there' });
+  res.send({ bye: 'dudes' });
 });
 
 // all caps = constant that should be taken mad seriously.
