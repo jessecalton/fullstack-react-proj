@@ -4,45 +4,15 @@ const express = require('express');
 // React gives you access to ES2015, so we have that
 // going for us, which is nice.
 
-// Gives express the idea of how to handle authentication
-const passport = require('passport');
-
-// Instructs passport on how to authenticate our users w/ Google.
-// Only care about the Strategy class.
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const keys = require('./config/keys');
+require('./services/passport');
+// passport.js doesn't return anything, we only need it to be executed.
+// Hence, no variable assignment
 
 // This here represents a running express app. It listens.
 const app = express();
 
-// .use() is a generic register, saying there is a new strategy available.
-// Creates a new instance of the Google OAuth strategy
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: keys.googleClientID,
-      clientSecret: keys.googleClientSecret,
-      callbackURL: '/auth/google/callback',
-    },
-    (accessToken, refreshToken, profile, done) => {
-      console.log('access Token: ', accessToken);
-      console.log('refresh Token: ', refreshToken);
-      console.log('profile: ', profile);
-    }
-  )
-);
-
-app.get(
-  '/auth/google',
-  passport.authenticate('google', {
-    scope: ['profile', 'email'],
-    // scope is what we want to have access to from that user
-  })
-);
-
-// Now that we have the "code" from the query string, GoogleStrategy will handle the request differently,
-// exchanging the "code" for the actual user profile
-app.get('/auth/google/callback', passport.authenticate('google'));
+// authRoutes will attach our routes to our Express app.
+require('./routes/authRoutes')(app);
 
 // all caps = constant that should be taken mad seriously.
 const PORT = process.env.PORT || 5000;
