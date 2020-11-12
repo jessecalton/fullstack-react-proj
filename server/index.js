@@ -4,9 +4,17 @@ const express = require('express');
 // React gives you access to ES2015, so we have that
 // going for us, which is nice.
 
+const mongoose = require('mongoose');
+const keys = require('./config/keys');
+
+// Have to require 'User' model first because 'passport.js' file makes use of it.
+require('./models/User');
 require('./services/passport');
 // passport.js doesn't return anything, we only need it to be executed.
 // Hence, no variable assignment
+
+// Connecting to mongoose
+mongoose.connect(keys.mongoURI);
 
 // This here represents a running express app. It listens.
 const app = express();
