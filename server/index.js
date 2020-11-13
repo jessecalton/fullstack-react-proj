@@ -5,6 +5,8 @@ const express = require('express');
 // going for us, which is nice.
 
 const mongoose = require('mongoose');
+const cookieSession = require('cookie-session');
+const passport = require('passport');
 const keys = require('./config/keys');
 
 // Have to require 'User' model first because 'passport.js' file makes use of it.
@@ -18,6 +20,19 @@ mongoose.connect(keys.mongoURI);
 
 // This here represents a running express app. It listens.
 const app = express();
+
+app.use(
+  cookieSession({
+    // 30 day session life
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+    // keys to encrypt our cookie
+    // Must be an array, in case we supply multiple keys
+    keys: [keys.cookieKey],
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 // authRoutes will attach our routes to our Express app.
 require('./routes/authRoutes')(app);
