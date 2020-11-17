@@ -31,23 +31,20 @@ passport.use(
       callbackURL: '/auth/google/callback',
       proxy: true,
     },
-    (accessToken, refreshToken, profile, done) => {
+    async (accessToken, refreshToken, profile, done) => {
       // Pass in search criteria
       // Search the Users collection and find one.
-      User.findOne({ googleId: profile.id }).then((existingUser) => {
-        // existingUser is a model instance of the user that was found, or null
-        if (existingUser) {
-          // We have found a record, so don't save a new one.
-          done(null, existingUser);
-        } else {
-          // Creating a model instance:
-          // Make a new record, bc one does not previously exist.
-          // Pass in all the properties that a user will have
-          new User({ googleId: profile.id })
-            .save() // save it
-            .then((user) => done(null, user)); // we get another model instance,
-        }
-      });
+      const existingUser = await User.findOne({ googleId: profile.id });
+      // existingUser is a model instance of the user that was found, or null
+      if (existingUser) {
+        // We have found a record, so don't save a new one.
+        return done(null, existingUser);
+      }
+      // Creating a model instance:
+      // Make a new record, bc one does not previously exist.
+      // Pass in all the properties that a user will have
+      const user = await new User({ googleId: profile.id }).save(); // save it
+      done(null, user);
     }
   )
 );
