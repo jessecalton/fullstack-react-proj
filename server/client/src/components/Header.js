@@ -6,6 +6,11 @@ class Header extends Component {
       <nav>
         <div className='nav-wrapper'>
           <a className='left brand-logo'>Emaily</a>
+          <ul className='right'>
+            <li>
+              <a>Login With Googs</a>
+            </li>
+          </ul>
         </div>
       </nav>
     );
