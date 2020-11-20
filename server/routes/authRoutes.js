@@ -13,14 +13,21 @@ module.exports = (app) => {
 
   // Now that we have the "code" from the query string, GoogleStrategy will handle the request differently,
   // exchanging the "code" for the actual user profile
-  app.get('/auth/google/callback', passport.authenticate('google'));
+  app.get(
+    '/auth/google/callback',
+
+    passport.authenticate('google'),
+    (req, res) => {
+      // redirecting the route after authentication from googs
+      res.redirect('/surveys');
+    }
+  );
 
   // Any user that is authenticated gets logged out
   app.get('/api/logout', (req, res) => {
     // This kills the cookie
     req.logout();
-    res.send(req.user);
-    // req.user will basically be undefined
+    res.redirect('/');
   });
 
   app.get('/api/current_user', (req, res) => {
