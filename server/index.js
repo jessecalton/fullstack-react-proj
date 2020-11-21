@@ -7,6 +7,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
+const bodyParser = require('body-parser');
 const keys = require('./config/keys');
 
 // Have to require 'User' model first because 'passport.js' file makes use of it.
@@ -21,6 +22,7 @@ mongoose.connect(keys.mongoURI);
 // This here represents a running express app. It listens.
 const app = express();
 
+app.use(bodyParser.json());
 app.use(
   cookieSession({
     // 30 day session life
@@ -35,7 +37,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // authRoutes will attach our routes to our Express app.
+// `require('./name/of/route)` turns into a function, which is immediately called
+// with the express `app` object.
 require('./routes/authRoutes')(app);
+require('./routes/billingRoutes')(app);
 
 // all caps = constant that should be taken mad seriously.
 const PORT = process.env.PORT || 5000;
