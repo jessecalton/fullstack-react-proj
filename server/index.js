@@ -42,6 +42,21 @@ app.use(passport.session());
 require('./routes/authRoutes')(app);
 require('./routes/billingRoutes')(app);
 
+if (process.env.NODE_ENV === 'production') {
+  // Express will serve up production assets,
+  // like main.js file, or main.css file!
+  // Route not found? Look in 'client/build' for the route.
+  app.use(express.static('client/build'));
+
+  // Express will serve up the index.html file
+  // if it doesn't recognize the route.
+  // It'll assume react-router has the route. It's the catch-all case.
+  const path = require('path');
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+  });
+}
+
 // all caps = constant that should be taken mad seriously.
 const PORT = process.env.PORT || 5000;
 // We won't know the production environment's (Heroku's) PORT ahead of time.
