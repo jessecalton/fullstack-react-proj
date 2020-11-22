@@ -12,6 +12,7 @@ const keys = require('./config/keys');
 
 // Have to require 'User' model first because 'passport.js' file makes use of it.
 require('./models/User');
+require('./models/Survey');
 require('./services/passport');
 // passport.js doesn't return anything, we only need it to be executed.
 // Hence, no variable assignment
